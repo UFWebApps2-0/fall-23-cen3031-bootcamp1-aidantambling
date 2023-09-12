@@ -10,10 +10,16 @@ var requestHandler = function(request, response) {
     You will need to use several of its properties: url and method
   */
   //console.log(request);
-
+    if (request.method === 'GET' && request.url === '/listings') {
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.end(listingData);
+    } else {
+        response.writeHead(404, { 'Content-Type': 'text/plain'});
+        response.end('Not Found');
+    }
   /*
     Your request handler should send listingData in the JSON format as a response if a GET request 
-    is sent to the '/listings' path. Otherwise, it should send a 404 error. 
+    is sent to the '/listings' path. Otherwise, it should send a 404 error.
 
     HINT: Explore the request object and its properties 
     HINT: Explore the response object and its properties
@@ -29,9 +35,22 @@ var requestHandler = function(request, response) {
     Helpful example: if-else structure- https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/if...else
 
     */
+
+
 };
 
 fs.readFile('listings.json', 'utf8', function(err, data) {
+    if (err) {
+        throw err;
+    }
+
+    listingData = data;
+
+    server = http.createServer(requestHandler);
+
+    server.listen(port, function() {
+        console.log('Server is listening on port ' + port);
+    });
   /*
     This callback function should save the data in the listingData variable, 
     then start the server. 
